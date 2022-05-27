@@ -47,7 +47,6 @@ stages:
         manifests: |
           $(Build.SourcesDirectory)/manifests/deployment.yml
           $(Build.SourcesDirectory)/manifests/service.yml
-        imagePullSecrets: |
-          $(imagePullSecret)
+        imagePullSecrets: $(imagePullSecret)
         containers: |
           $(containerRegistry)/$(imageRepository):$(tag)
