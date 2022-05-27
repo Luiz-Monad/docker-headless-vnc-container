@@ -45,7 +45,7 @@ stages:
       displayName: Create imagePullSecret
       inputs:
         action: createSecret
-        kubernetesServiceConnection: ${kubernetesServiceConnection}
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
         secretType: dockerRegistry
         secretName: $(imagePullSecret)
         dockerRegistryEndpoint: $(containerRegistry)
@@ -54,7 +54,7 @@ stages:
       displayName: Deploy to Kubernetes cluster
       inputs:
         action: deploy
-        kubernetesServiceConnection: ${kubernetesServiceConnection}
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
         manifests: |
           $(Pipeline.Workspace)/manifests/deployment.yml
           $(Pipeline.Workspace)/manifests/service.yml
