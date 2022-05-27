@@ -20,27 +20,16 @@ variables:
 
 
 stages:
-
-- stage: Build
-  displayName: Build stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - upload: manifests
-      artifact: manifests
-
 - stage: Deploy
   displayName: Deploy stage
-  dependsOn: Build
+
   jobs:
   - job: Deploy
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
     steps:
+  
     - task: KubernetesManifest@0
       displayName: Create imagePullSecret
       inputs:
@@ -56,8 +45,8 @@ stages:
         action: deploy
         kubernetesServiceConnection: $(kubernetesServiceConnection)
         manifests: |
-          $(Pipeline.Workspace)/manifests/deployment.yml
-          $(Pipeline.Workspace)/manifests/service.yml
+          $(Build.SourcesDirectory)/manifests/deployment.yml
+          $(Build.SourcesDirectory)/manifests/service.yml
         imagePullSecrets: |
           $(imagePullSecret)
         containers: |
