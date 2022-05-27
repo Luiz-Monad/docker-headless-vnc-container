@@ -9,10 +9,8 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '9a1e2eb2-5e7c-4213-bd28-b73cf3225284'
   imageRepository: 'docker-headless-vnc'
-  containerRegistry: 'monadic.azurecr.io'
+  containerRegistry: 'monadic'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.centos.xfce.vnc'
   tag: '$(Build.BuildId)'
 
@@ -35,6 +33,6 @@ stages:
         command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
+        containerRegistry: $(containerRegistry)
         tags: |
           $(tag)
