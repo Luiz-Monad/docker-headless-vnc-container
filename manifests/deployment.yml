@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: dockerheadlessvnc 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dockerheadlessvnc
+  template:
+    metadata:
+      labels:
+        app: dockerheadlessvnc 
+    spec:
+      containers:
+        - name: dockerheadlessvnc 
+          image: monadic.azurecr.io/dockerheadlessvnc
+          ports:
+          - containerPort: 80
