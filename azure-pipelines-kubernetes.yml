@@ -13,6 +13,7 @@ variables:
   containerRegistry: 'monadic'
   tag: '13'
   imagePullSecret: 'monadic5559eb9a-auth'
+  kubernetesServiceConnection: 'swarm-chrome-default'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -39,23 +40,23 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'docker-headless-vnc-container.default'
     steps:
     - task: KubernetesManifest@0
       displayName: Create imagePullSecret
       inputs:
-        action: createSecret
-        secretName: $(imagePullSecret)
-        dockerRegistryEndpoint: $(containerRegistry)
+        action: 'createSecret'
+        kubernetesServiceConnection: '${kubernetesServiceConnection}'
+        secretType: 'dockerRegistry'
+        secretName: '$(imagePullSecret)'
+        dockerRegistryEndpoint: '$(containerRegistry)'
 
     - task: KubernetesManifest@0
       displayName: Deploy to Kubernetes cluster
       inputs:
-        action: deploy
+        action: 'deploy'
+        kubernetesServiceConnection: '${kubernetesServiceConnection}'
         manifests: |
           $(Pipeline.Workspace)/manifests/deployment.yml
           $(Pipeline.Workspace)/manifests/service.yml
-        imagePullSecrets: |
-          $(imagePullSecret)
-        containers: |
-          $(containerRegistry)/$(imageRepository):$(tag)
+        containers: '$(containerRegistry)/$(imageRepository):$(tag)'
+        imagePullSecrets: '$(imagePullSecret)'
