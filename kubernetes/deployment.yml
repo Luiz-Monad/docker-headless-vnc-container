@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-headless-vnc-deploy
+  labels:
+    app: xfce-vnc-browser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xfce-vnc-browser
+  template:
+    metadata:
+      labels:
+        app: xfce-vnc-browser
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: docker-headless-vnc
+        image: monadic.azurecr.io/docker-headless-vnc
+        imagePullPolicy: Always
+        args:
+          ### make normal UI startup to connect via: oc rsh <pod-name> bash
+          #- '--tail-log'
+        ### checks that vnc server is up and running
+        livenessProbe:
+          tcpSocket:
+            port: 5901
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        ### checks if http-vnc connection is working
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 6901
+            scheme: HTTP
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-headless-vnc-service
+  labels:
+    app: xfce-vnc-browser
+spec:
+  selector:
+    app: xfce-vnc-browser
+  externalName: vnc-browser
+  ports:
+  - name: http-port-tcp
+    protocol: TCP
+    port: 80
+    targetPort: 6901
+  type: LoadBalancer

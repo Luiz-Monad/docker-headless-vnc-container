@@ -1,0 +1,49 @@
+# Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/ecosystems/kubernetes/deploy
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  imageRepository: 'docker-headless-vnc'
+  containerRegistry: 'monadic'
+  tag: 'latest'
+  imagePullSecret: 'monadic5559eb9a-auth'
+  kubernetesServiceConnection: 'swarm-chrome-default'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Deploy
+  displayName: Deploy stage
+
+  jobs:
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+  
+    - task: KubernetesManifest@0
+      displayName: Create imagePullSecret
+      inputs:
+        action: createSecret
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
+        secretType: dockerRegistry
+        secretName: $(imagePullSecret)
+        dockerRegistryEndpoint: $(containerRegistry)
+
+    - task: KubernetesManifest@0
+      displayName: Deploy to Kubernetes cluster
+      inputs:
+        action: deploy
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
+        manifests: |
+          $(Build.SourcesDirectory)/kubernetes/deployment.yml
+        imagePullSecrets: $(imagePullSecret)
+        containers: |
+          $(containerRegistry)/$(imageRepository):$(tag)
