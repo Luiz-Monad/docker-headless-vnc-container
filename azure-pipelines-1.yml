@@ -11,10 +11,9 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'f30ba297-e38e-47d7-8f9a-ae35aae7d8c2'
-  imageRepository: 'dockerheadlessvnc'
+  dockerRegistryServiceConnection: '9a1e2eb2-5e7c-4213-bd28-b73cf3225284'
+  imageRepository: 'docker-headless-vnc'
   containerRegistry: 'monadic.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'monadic5559eb9a-auth'
 
@@ -23,10 +22,8 @@ variables:
 
 
 stages:
-
 - stage: Deploy
   displayName: Deploy stage
-  dependsOn: Build
 
   jobs:
   - deployment: Deploy
