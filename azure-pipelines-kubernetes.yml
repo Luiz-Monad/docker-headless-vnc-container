@@ -11,7 +11,7 @@ resources:
 variables:
   imageRepository: 'docker-headless-vnc'
   containerRegistry: 'monadic'
-  tag: 'latest'
+  tag: '13'
   imagePullSecret: 'monadic5559eb9a-auth'
 
   # Agent VM image name
