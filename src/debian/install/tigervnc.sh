@@ -2,5 +2,4 @@
 set -e
 
 echo "Install TigerVNC server"
-yum -y install tigervnc-server
-yum clean all
+apt-get install -y tigervnc-standalone-server
