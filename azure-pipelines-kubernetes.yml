@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '9a1e2eb2-5e7c-4213-bd28-b73cf3225284'
+  dockerRegistryServiceConnection: 'fd406fc7-d11d-4528-b563-35fa998105ef'
   imageRepository: 'docker-headless-vnc'
   containerRegistry: 'monadic.azurecr.io'
   tag: '$(Build.BuildId)'
@@ -21,8 +21,26 @@ variables:
 
 
 stages:
+
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: 'manifests'
+        Contents: '**'
+        TargetFolder: 'manifests'
+    - upload: manifests
+      artifact: manifests
+
 - stage: Deploy
   displayName: Deploy stage
+  dependsOn: Build
 
   jobs:
   - deployment: Deploy
@@ -52,4 +70,3 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
-
