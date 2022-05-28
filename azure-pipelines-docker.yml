@@ -35,4 +35,5 @@ stages:
         dockerfile: $(dockerfilePath)
         containerRegistry: $(containerRegistry)
         tags: |
-          $(tag)
+          $(tag) |
+          latest
