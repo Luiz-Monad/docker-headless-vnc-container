@@ -10,7 +10,7 @@ resources:
 variables:
   imageRepository: 'docker-headless-vnc'
   containerRegistry: 'monadic'
-  tag: '13'
+  tag: 'latest'
   imagePullSecret: 'monadic5559eb9a-auth'
   kubernetesServiceConnection: 'swarm-chrome-default'
 
