@@ -1,6 +1,5 @@
 # Deploy to Azure Kubernetes Service
-# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# https://docs.microsoft.com/azure/devops/pipelines/ecosystems/kubernetes/deploy
 
 trigger:
 - master
@@ -17,7 +16,6 @@ variables:
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
 
 stages:
 - stage: Deploy
@@ -45,8 +43,7 @@ stages:
         action: deploy
         kubernetesServiceConnection: $(kubernetesServiceConnection)
         manifests: |
-          $(Build.SourcesDirectory)/manifests/deployment.yml
-          $(Build.SourcesDirectory)/manifests/service.yml
+          $(Build.SourcesDirectory)/kubernetes/deployment.yml
         imagePullSecrets: $(imagePullSecret)
         containers: |
           $(containerRegistry)/$(imageRepository):$(tag)
