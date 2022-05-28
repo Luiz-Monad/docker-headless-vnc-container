@@ -33,7 +33,7 @@ stages:
         containerRegistry: '$(containerRegistry)'
         repository: '$(imageRepository)'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '$(dockerfilePath)'
         tags: |
           $(tag)
           latest
