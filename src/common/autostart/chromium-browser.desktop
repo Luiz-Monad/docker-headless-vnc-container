@@ -1,0 +1,17 @@
+[Desktop Entry]
+Version=1.0
+Name=Navigate Web Browser
+GenericName=Navigate Web Browser
+Comment=Access the Internet
+Exec=/bin/bash -c 'chromium-browser --temp-profile `echo $GO_SITE`'
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=chromium-browser
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=Chromium-browser
+StartupNotify=true
+Actions=NewWindow;Incognito;TempProfile;
+X-AppInstall-Package=chromium-browser
+Path=
