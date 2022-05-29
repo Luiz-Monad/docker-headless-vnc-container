@@ -1,15 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-headless-vnc
+  name: docker-headless-vnc-deploy
   labels:
-    application: docker-headless-vnc
+    app: xfce-vnc-browser
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: xfce-vnc-browser
   template:
     metadata:
       labels:
-        application: docker-headless-vnc
+        app: xfce-vnc-browser
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -37,16 +40,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: docker-headless-vnc-service
   labels:
-    application: docker-headless-vnc
-  name: docker-headless-vnc
+    app: xfce-vnc-browser
 spec:
-  externalName: headless-vnc
+  selector:
+    app: xfce-vnc-browser
+  externalName: vnc-browser
   ports:
   - name: http-port-tcp
     protocol: TCP
     port: 80
     targetPort: 6901
-  selector:
-      application: docker-headless-vnc
   type: LoadBalancer
