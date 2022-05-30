@@ -11,7 +11,7 @@ resources:
 variables:
   imageRepository: 'docker-headless-vnc-epotes-cli'
   containerRegistry: 'monadic'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.centos.epoptes.client.vnc'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.debian.epoptes.client.vnc'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
