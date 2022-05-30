@@ -12,6 +12,9 @@ cleanup () {
 }
 trap cleanup SIGINT SIGTERM
 
+## import the certificate
+epoptes-client -c
+
 ## start the service
 echo -e "\n---------------- start epoptes client ----------------------"
 /sbin/start-stop-daemon --start --oknodo --quiet -b --exec /usr/sbin/epoptes-client
