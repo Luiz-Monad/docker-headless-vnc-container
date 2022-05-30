@@ -4,10 +4,10 @@ FROM docker-headless-vnc
 
 ENV REFRESHED_AT 2022-05-30
 
-LABEL io.k8s.description="Epoptes client with Headless VNC Container with Xfce window manager, firefox and chromium" \
-      io.k8s.display-name="Epoptes client Headless VNC Container" \
+LABEL io.k8s.description="Epoptes server with Headless VNC Container with Xfce window manager" \
+      io.k8s.display-name="Epoptes server Headless VNC Container" \
       io.openshift.expose-services="6901:http,5901:xvnc" \
-      io.openshift.tags="vnc, ubuntu, xfce" \
+      io.openshift.tags="vnc, centos, xfce" \
       io.openshift.non-scalable=true
 
 ### Environment config
@@ -17,12 +17,12 @@ ENV SERVER=myserver.local \
 USER root
 
 ### Install epoptes-client
-RUN apt-get install --install-recommends -y epoptes-client
+RUN apt-get install --install-recommends -y epoptes
 
 ### configure startup
 ADD ./src/common/scripts $STARTUPDIR
 
 USER 1000
 
-ENTRYPOINT ["/dockerstartup/epoptes_client_startup.sh"]
+ENTRYPOINT ["/dockerstartup/epoptes_server_startup.sh"]
 CMD ["--wait"]
