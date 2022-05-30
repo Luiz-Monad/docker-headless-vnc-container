@@ -17,8 +17,9 @@ ENV SERVER=myserver.local \
 
 USER root
 
-### Install epoptes-client
-RUN apt-get install --install-recommends -y epoptes-client
+### Install epoptes
+ADD $DISTRO/epoptes-client.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/epoptes-client.sh
 
 ### configure startup
 ADD ./src/common/scripts $STARTUPDIR
