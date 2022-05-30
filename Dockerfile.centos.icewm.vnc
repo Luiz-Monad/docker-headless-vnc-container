@@ -28,33 +28,39 @@ ENV HOME=/headless \
     VNC_COL_DEPTH=24 \
     VNC_RESOLUTION=1280x1024 \
     VNC_PW=vncpassword \
-    VNC_VIEW_ONLY=false
+    VNC_VIEW_ONLY=false \
+    DISTRO=./src/centos/install/ \
+    COMMON=./src/common/install/
 WORKDIR $HOME
 
-### Add all install scripts for further steps
-ADD ./src/common/install/ $INST_SCRIPTS/
-ADD ./src/centos/install/ $INST_SCRIPTS/
-RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
-
 ### Install some common tools
+ADD $DISTRO/tools.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/tools.sh
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 ### Install xvnc-server & noVNC - HTML5 based VNC viewer
+ADD $DISTRO/tigervnc.sh $INST_SCRIPTS/
+ADD $COMMON/no_vnc.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/tigervnc.sh
 RUN $INST_SCRIPTS/no_vnc.sh
 
 ### Install firefox and chrome browser
+ADD $COMMON/firefox.sh $INST_SCRIPTS/
+ADD $DISTRO/chrome.sh $INST_SCRIPTS/
+ADD $DISTRO/chromium-wrapper $INST_SCRIPTS/
 RUN $INST_SCRIPTS/firefox.sh
 RUN $INST_SCRIPTS/chrome.sh
 
 ### Install IceWM UI
+ADD $DISTRO/icewm_ui.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/icewm_ui.sh
 ADD ./src/centos/icewm/ $HOME/
 
 ### configure startup
+ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 ADD ./src/common/scripts $STARTUPDIR
+ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
 USER 1000

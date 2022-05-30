@@ -1,0 +1,28 @@
+# This Dockerfile is used to build an headles vnc image based on Centos
+
+FROM docker-headless-vnc
+
+ENV REFRESHED_AT 2022-05-30
+
+LABEL io.k8s.description="Epoptes client with Headless VNC Container with Xfce window manager, firefox and chromium" \
+      io.k8s.display-name="Epoptes client Headless VNC Container" \
+      io.openshift.expose-services="6901:http,5901:xvnc" \
+      io.openshift.tags="vnc, centos, xfce" \
+      io.openshift.non-scalable=true
+
+### Environment config
+ENV SERVER=myserver.local \
+    STARTUPDIR=/dockerstartup
+
+USER root
+
+### Install epoptes-client
+RUN apt-get install --install-recommends -y epoptes-client
+
+### configure startup
+ADD ./src/common/scripts $STARTUPDIR
+
+USER 1000
+
+ENTRYPOINT ["/dockerstartup/epoptes_client_startup.sh"]
+CMD ["--wait"]
