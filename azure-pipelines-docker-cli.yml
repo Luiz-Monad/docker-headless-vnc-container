@@ -3,7 +3,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/ecosystems/containers/build-image
 
 trigger:
-- docker
+- epoptes-cli
 
 resources:
 - repo: self
