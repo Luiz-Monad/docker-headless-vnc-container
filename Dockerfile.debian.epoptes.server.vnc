@@ -1,6 +1,5 @@
 # This Dockerfile is used to build an headles vnc image based on Centos
 
-# FROM docker-headless-vnc
 FROM monadic.azurecr.io/docker-headless-vnc
 
 ENV REFRESHED_AT 2022-05-30
@@ -12,8 +11,9 @@ LABEL io.k8s.description="Epoptes server with Headless VNC Container with Xfce w
       io.openshift.non-scalable=true
 
 ### Environment config
-ENV SERVER=myserver.local \
-    STARTUPDIR=/dockerstartup
+ENV STARTUPDIR=/dockerstartup \
+    DISTRO=./src/debian/install/ \
+    COMMON=./src/common/install/
 
 USER root
 
