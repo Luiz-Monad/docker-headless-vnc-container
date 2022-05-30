@@ -11,11 +11,16 @@ LABEL io.k8s.description="Epoptes server with Headless VNC Container with Xfce w
       io.openshift.non-scalable=true
 
 ### Environment config
-ENV STARTUPDIR=/dockerstartup \
+ENV HOME=/headless \
+    TERM=xterm \
+    STARTUPDIR=/dockerstartup \
+    INST_SCRIPTS=/headless/install \
+    DEBIAN_FRONTEND=noninteractive \
     DISTRO=./src/debian/install/ \
     COMMON=./src/common/install/
 
 USER root
+WORKDIR $HOME
 
 ### Install epoptes
 ADD $DISTRO/epoptes.sh $INST_SCRIPTS/
