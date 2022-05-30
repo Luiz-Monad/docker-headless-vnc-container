@@ -1,0 +1,39 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/ecosystems/containers/build-image
+
+trigger:
+- docker
+
+resources:
+- repo: self
+
+variables:
+  imageRepository: 'docker-headless-vnc-epotes-cli'
+  containerRegistry: 'monadic'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.centos.xfce.vnc'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(containerRegistry)
+        tags: |
+          $(tag)
+          latest
