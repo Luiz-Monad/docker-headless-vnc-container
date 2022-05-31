@@ -3,15 +3,15 @@
 # https://docs.microsoft.com/azure/devops/pipelines/ecosystems/containers/build-image
 
 trigger:
-- docker
+- epoptes-cli
 
 resources:
 - repo: self
 
 variables:
-  imageRepository: 'docker-headless-vnc'
+  imageRepository: 'docker-headless-vnc-epotes-cli'
   containerRegistry: 'monadic'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.debian.xfce.vnc'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.debian.epoptes.client.vnc'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
