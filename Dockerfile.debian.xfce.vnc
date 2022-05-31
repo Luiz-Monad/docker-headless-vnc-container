@@ -62,7 +62,7 @@ RUN $INST_SCRIPTS/firefox.sh
 ADD $DISTRO/chrome.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/chrome.sh
 
-### configure startup
+### Configure startup
 ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 
@@ -77,9 +77,6 @@ RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
 ADD $DISTRO/chrome_setup.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/chrome_setup.sh $STARTUPDIR
-
-### autostart apps
-ADD $DISTRO/../xfce/ $HOME/
 
 USER 1000
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
