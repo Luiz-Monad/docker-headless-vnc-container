@@ -18,7 +18,7 @@ spec:
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
-          #- '--tail-log'
+          - '--tail-log'
         ### checks that vnc server is up and running
         livenessProbe:
           tcpSocket:
@@ -33,6 +33,47 @@ spec:
             scheme: HTTP
           initialDelaySeconds: 1
           timeoutSeconds: 1
+        resources:
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-headless-vnc-deploy
+  labels:
+    app: xfce-vnc-browser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xfce-vnc-browser
+  template:
+    metadata:
+      labels:
+        app: xfce-vnc-browser
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: docker-headless-vnc
+        image: monadic.azurecr.io/docker-headless-vnc
+        imagePullPolicy: Always
+        args:
+          ### make normal UI startup to connect via: oc rsh <pod-name> bash
+          - '--tail-log'
+        ### checks that vnc server is up and running
+        livenessProbe:
+          tcpSocket:
+            port: 5901
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        ### checks if http-vnc connection is working
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 6901
+            scheme: HTTP
+          initialDelaySeconds: 1
+          timeoutSeconds: 1
+        resources:
 ---
 apiVersion: v1
 kind: Service
@@ -50,3 +91,23 @@ spec:
   selector:
       app: docker-headless-vnc
   type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docker-headless-vnc-service-ingress
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: browser.0aa78c09b01d40a79e18.westus2.aksapp.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: xfce-vnc-browser
+            port: 
+              number: 80
+
