@@ -18,7 +18,6 @@ ENV HOME=/headless \
     DEBIAN_FRONTEND=noninteractive \
     DISTRO=./src/debian/install/ \
     COMMON=./src/common/install/
-
 USER root
 WORKDIR $HOME
 
@@ -26,10 +25,14 @@ WORKDIR $HOME
 ADD $DISTRO/epoptes-client.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/epoptes-client.sh
 
-### configure startup
-ADD ./src/common/scripts $STARTUPDIR
+### Configure startup
+ADD $COMMON/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts $STARTUPDIR
 
-USER 1000
+### Extra xfce/xdg config
+ADD $DISTRO/../xfce/ $HOME/
+ADD $DISTRO/../xdg/ $HOME/
 
+USER root
 ENTRYPOINT ["/dockerstartup/epoptes_client_startup.sh"]
 CMD ["--wait"]
