@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-headless-vnc-deploy
+  name: client-deploy
   labels:
-    app: xfce-vnc-browser
+    app: client-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: xfce-vnc-browser
+      app: client-deploy
   template:
     metadata:
       labels:
-        app: xfce-vnc-browser
+        app: client-deploy
     spec:
       terminationGracePeriodSeconds: 5
       containers:
-      - name: docker-headless-vnc
-        image: monadic.azurecr.io/docker-headless-vnc
+      - name: docker-headless-vnc-epotes-cli
+        image: monadic.azurecr.io/docker-headless-vnc-epotes-cli
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
@@ -41,23 +41,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-headless-vnc-deploy
+  name: server-deploy
   labels:
-    app: xfce-vnc-browser
+    app: server-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: xfce-vnc-browser
+      app: server-deploy
   template:
     metadata:
       labels:
-        app: xfce-vnc-browser
+        app: server-deploy
     spec:
       terminationGracePeriodSeconds: 5
       containers:
-      - name: docker-headless-vnc
-        image: monadic.azurecr.io/docker-headless-vnc
+      - name: docker-headless-vnc-epotes-srv
+        image: monadic.azurecr.io/docker-headless-vnc-epotes-srv
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
@@ -81,12 +81,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: docker-headless-vnc-service
+  name: server-service
   labels:
-    app: xfce-vnc-browser
+    app: server-service
 spec:
   selector:
-    app: xfce-vnc-browser
+    app: server-deploy
   externalName: vnc-browser
   ports:
   - name: http-port-tcp
@@ -98,7 +98,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: docker-headless-vnc-service-ingress
+  name: public-ingress
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
@@ -109,8 +109,7 @@ spec:
       - path: /
         pathType: Prefix
         backend:
-          service: 
-            name: xfce-vnc-browser
-            port: 
+          service:
+            name: server-service
+            port:
               number: 80
-
