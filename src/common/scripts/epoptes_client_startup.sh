@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 ### every exit != 0 fails the script
 set -e
 
@@ -12,8 +12,12 @@ cleanup () {
 }
 trap cleanup SIGINT SIGTERM
 
-echo -e "\n------------------ start dbus ------------------"
-dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address
+## import the certificate
+epoptes-client -c
+
+## start the service
+echo -e "\n---------------- start epoptes client ----------------------"
+/sbin/start-stop-daemon --start --oknodo --quiet -b --exec /usr/sbin/epoptes-client
 
 ## cascade the next start script
 echo -e "\n------------------- vnc_startup.sh -------------------------"
