@@ -31,6 +31,7 @@ cp /usr/share/applications/epoptes.desktop $HOME/.config/autostart
 chmod +x $HOME/.config/autostart/epoptes.desktop
 cp $HOME/.config/autostart/epoptes.desktop $HOME/Desktop/
 echo -e "[Desktop Entry]\nHidden=True" > $HOME/.config/autostart/epoptes-client.desktop
+chown 1000 $HOME/.config
 
 ## cascade the next start script
 echo -e "\n------------------- vnc_startup.sh -------------------------"
