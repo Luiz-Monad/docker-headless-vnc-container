@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: client-deploy
   labels:
-    app: client-deploy
+    app: client
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client-deploy
+      app: client
   template:
     metadata:
       labels:
-        app: client-deploy
+        app: client
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -21,7 +21,8 @@ spec:
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
-          - '--tail-log'
+          # - '--tail-log'
+          - '--debug'
         ### checks that vnc server is up and running
         livenessProbe:
           tcpSocket:
@@ -37,31 +38,39 @@ spec:
           initialDelaySeconds: 1
           timeoutSeconds: 1
         resources:
+        ports:
+          - containerPort: 5901
+          - containerPort: 6901
+          - containerPort: 789
+        env:
+          - name: SERVER
+            value: server-service-epoptes
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: server-deploy
   labels:
-    app: server-deploy
+    app: server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server-deploy
+      app: server
   template:
     metadata:
       labels:
-        app: server-deploy
+        app: server
     spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: docker-headless-vnc-epotes-srv
-        image: monadic.azurecr.io/docker-headless-vnc-epotes-srv
+        image: monadic.azurecr.io/docker-headless-vnc-epotes-srv:latest
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
-          - '--tail-log'
+          # - '--tail-log'
+          - '--debug'
         ### checks that vnc server is up and running
         livenessProbe:
           tcpSocket:
@@ -77,13 +86,34 @@ spec:
           initialDelaySeconds: 1
           timeoutSeconds: 1
         resources:
+        ports:
+          - containerPort: 5901
+          - containerPort: 6901
+          - containerPort: 789
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: server-service
+  name: server-service-epoptes
   labels:
-    app: server-service
+    app: server
+spec:
+  selector:
+    app: server-deploy
+  externalName: epoptes
+  ports:
+  - name: http-port-tcp
+    protocol: TCP
+    port: 789
+    targetPort: 789
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service-http
+  labels:
+    app: server
 spec:
   selector:
     app: server-deploy
@@ -110,6 +140,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: server-service
+            name: server-service-http
             port:
               number: 80
