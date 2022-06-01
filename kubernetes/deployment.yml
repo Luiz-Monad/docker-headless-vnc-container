@@ -41,9 +41,9 @@ spec:
           timeoutSeconds: 1
         resources:
         ports:
-          - containerPort: 5901
-            protocol: TCP
-            name: vnc
+          # - containerPort: 5901
+          #   protocol: TCP
+          #   name: vnc
           - containerPort: 6901
             protocol: TCP
             name: http
@@ -93,9 +93,9 @@ spec:
           initialDelaySeconds: 2
           timeoutSeconds: 1
         ports:
-          - containerPort: 5901
-            protocol: TCP
-            name: vnc
+          # - containerPort: 5901
+          #   protocol: TCP
+          #   name: vnc
           - containerPort: 6901
             protocol: TCP
             name: http
@@ -103,26 +103,6 @@ spec:
             protocol: TCP
             name: epoptes
         resources:
-        ports:
-          - containerPort: 5901
-          - containerPort: 6901
-          - containerPort: 789
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: server-service-epoptes
-  labels:
-    app: server
-spec:
-  selector:
-    app: server
-  ports:
-  - name: epoptes-port-tcp
-    protocol: TCP
-    port: 789
-    targetPort: 789
-  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -143,6 +123,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: server-service-http
   labels:
     app: server
 spec:
