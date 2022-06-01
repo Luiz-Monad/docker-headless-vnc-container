@@ -8,16 +8,18 @@ spec:
   replicas: 8
   selector:
     matchLabels:
-      app: client
+      container: client
   template:
     metadata:
       labels:
-        app: client
+        container: client
     spec:
-      terminationGracePeriodSeconds: 5
+      terminationGracePeriodSeconds: 2
+      imagePullSecrets: 
+        - name: monadic5559eb9a-auth
       containers:
       - name: docker-headless-vnc-epotes-cli
-        image: monadic.azurecr.io/docker-headless-vnc-epotes-cli
+        image: monadic.azurecr.io/docker-headless-vnc-epotes-cli:latest
         imagePullPolicy: Always
         args:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
@@ -26,21 +28,25 @@ spec:
         ### checks that vnc server is up and running
         livenessProbe:
           tcpSocket:
-            port: 5901
-          initialDelaySeconds: 1
+            port: http
+          initialDelaySeconds: 2
           timeoutSeconds: 1
         ### checks if http-vnc connection is working
         readinessProbe:
           httpGet:
             path: /
-            port: 6901
+            port: http
             scheme: HTTP
-          initialDelaySeconds: 1
+          initialDelaySeconds: 2
           timeoutSeconds: 1
         resources:
         ports:
-          - containerPort: 5901
+          # - containerPort: 5901
+          #   protocol: TCP
+          #   name: vnc
           - containerPort: 6901
+            protocol: TCP
+            name: http
         env:
           - name: SERVER
             value: server-service-epoptes
@@ -55,13 +61,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server
+      container: server
   template:
     metadata:
       labels:
-        app: server
+        container: server
     spec:
-      terminationGracePeriodSeconds: 5
+      terminationGracePeriodSeconds: 2
+      imagePullSecrets: 
+        - name: monadic5559eb9a-auth
       containers:
       - name: docker-headless-vnc-epotes-srv
         image: monadic.azurecr.io/docker-headless-vnc-epotes-srv:latest
@@ -73,22 +81,28 @@ spec:
         ### checks that vnc server is up and running
         livenessProbe:
           tcpSocket:
-            port: 5901
-          initialDelaySeconds: 1
+            port: epoptes
+          initialDelaySeconds: 2
           timeoutSeconds: 1
         ### checks if http-vnc connection is working
         readinessProbe:
           httpGet:
             path: /
-            port: 6901
+            port: http
             scheme: HTTP
-          initialDelaySeconds: 1
+          initialDelaySeconds: 2
           timeoutSeconds: 1
-        resources:
         ports:
-          - containerPort: 5901
+          # - containerPort: 5901
+          #   protocol: TCP
+          #   name: vnc
           - containerPort: 6901
+            protocol: TCP
+            name: http
           - containerPort: 789
+            protocol: TCP
+            name: epoptes
+        resources:
 ---
 apiVersion: v1
 kind: Service
@@ -98,13 +112,12 @@ metadata:
     app: server
 spec:
   selector:
-    app: server-deploy
-  externalName: epoptes
+    container: server
   ports:
-  - name: http-port-tcp
+  - name: epoptes-port-tcp
     protocol: TCP
     port: 789
-    targetPort: 789
+    targetPort: epoptes
   type: ClusterIP
 ---
 apiVersion: v1
@@ -115,19 +128,18 @@ metadata:
     app: server
 spec:
   selector:
-    app: server-deploy
-  externalName: vnc-browser
+    container: server
   ports:
   - name: http-port-tcp
     protocol: TCP
     port: 80
-    targetPort: 6901
+    targetPort: http
   type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: public-ingress
+  name: ingress-public
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
