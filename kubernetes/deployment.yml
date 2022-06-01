@@ -99,7 +99,6 @@ metadata:
 spec:
   selector:
     app: server-deploy
-  externalName: epoptes
   ports:
   - name: http-port-tcp
     protocol: TCP
@@ -116,7 +115,6 @@ metadata:
 spec:
   selector:
     app: server-deploy
-  externalName: vnc-browser
   ports:
   - name: http-port-tcp
     protocol: TCP
