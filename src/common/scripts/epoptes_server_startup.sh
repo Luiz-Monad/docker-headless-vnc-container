@@ -26,12 +26,14 @@ if [[ $DEBUG == true ]]; then echo "/usr/bin/twistd3 epoptes"; fi
 
 ## configure session
 echo -e "\n------------------- config session -------------------------"
-useradd --uid 1000 --user-group --groups epoptes --home-dir $HOME/ --shell /bin/bash default_headless
+cp /usr/share/applications/epoptes.desktop $HOME/Desktop/
 cp /usr/share/applications/epoptes.desktop $HOME/.config/autostart
-chmod +x $HOME/.config/autostart/epoptes.desktop
-cp $HOME/.config/autostart/epoptes.desktop $HOME/Desktop/
 echo -e "[Desktop Entry]\nHidden=True" > $HOME/.config/autostart/epoptes-client.desktop
-chown 1000 $HOME/.config
+useradd --uid 1000 --user-group --groups epoptes --home-dir $HOME/ --shell /bin/bash default_headless
+chown -R 1000:1000 $HOME/.config
+chown -R 1000:1000 $HOME/Desktop
+chmod ugo+rwx $HOME/.config/autostart/*.desktop
+chmod ugo+rwx $HOME/Desktop/*.desktop
 
 ## cascade the next start script
 echo -e "\n------------------- vnc_startup.sh -------------------------"
