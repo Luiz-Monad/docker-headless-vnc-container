@@ -42,6 +42,8 @@ spec:
           - containerPort: 5901
           - containerPort: 6901
           - containerPort: 789
+        env:
+          - SERVER: server
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -60,8 +62,6 @@ spec:
         app: server
     spec:
       terminationGracePeriodSeconds: 5
-      imagePullSecrets: 
-        - name: "monadic5559eb9a-auth"
       containers:
       - name: docker-headless-vnc-epotes-srv
         image: monadic.azurecr.io/docker-headless-vnc-epotes-srv:latest
@@ -89,23 +89,6 @@ spec:
           - containerPort: 5901
           - containerPort: 6901
           - containerPort: 789
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: server-service-epoptes
-  labels:
-    app: server
-spec:
-  selector:
-    app: server-deploy
-  externalName: epoptes
-  ports:
-  - name: http-port-tcp
-    protocol: TCP
-    port: 789
-    targetPort: 789
-  type: NodePort
 ---
 apiVersion: v1
 kind: Service
