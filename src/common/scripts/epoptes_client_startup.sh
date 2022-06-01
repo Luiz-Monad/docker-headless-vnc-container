@@ -26,7 +26,7 @@ epoptes-client -c
 
 ## configure session
 echo -e "\n------------------- config session -------------------------"
-useradd --uid 1000 --user-group --groups epoptes --home-dir $HOME/ --shell /bin/bash default_headless
+useradd --uid 1000 --user-group --home-dir $HOME/ --shell /bin/bash default_headless
 echo -e "[Desktop Entry]\nHidden=False" > $HOME/.config/autostart/epoptes-client.desktop
 
 ## cascade the next start script
