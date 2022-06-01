@@ -5,7 +5,7 @@ metadata:
   labels:
     app: client
 spec:
-  replicas: 1
+  replicas: 8
   selector:
     matchLabels:
       app: client
@@ -41,7 +41,6 @@ spec:
         ports:
           - containerPort: 5901
           - containerPort: 6901
-          - containerPort: 789
         env:
           - name: SERVER
             value: server-service-epoptes
@@ -106,7 +105,7 @@ spec:
     protocol: TCP
     port: 789
     targetPort: 789
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
