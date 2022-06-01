@@ -43,7 +43,8 @@ spec:
           - containerPort: 6901
           - containerPort: 789
         env:
-          - name: server-service-epoptes
+          - name: SERVER
+            value: server-service-epoptes
 ---
 apiVersion: apps/v1
 kind: Deployment
