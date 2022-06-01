@@ -8,11 +8,11 @@ spec:
   replicas: 8
   selector:
     matchLabels:
-      app: client
+      container: client
   template:
     metadata:
       labels:
-        app: client
+        container: client
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -55,11 +55,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server
+      container: server
   template:
     metadata:
       labels:
-        app: server
+        container: server
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -98,9 +98,9 @@ metadata:
     app: server
 spec:
   selector:
-    app: server-deploy
+    app: server
   ports:
-  - name: http-port-tcp
+  - name: epoptes-port-tcp
     protocol: TCP
     port: 789
     targetPort: 789
@@ -114,7 +114,7 @@ metadata:
     app: server
 spec:
   selector:
-    app: server-deploy
+    app: server
   ports:
   - name: http-port-tcp
     protocol: TCP
@@ -125,7 +125,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: public-ingress
+  name: ingress-public
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
 spec:
