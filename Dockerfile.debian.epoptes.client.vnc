@@ -22,8 +22,16 @@ USER root
 WORKDIR $HOME
 
 ### Install epoptes
-ADD $DISTRO/epoptes-client.sh $INST_SCRIPTS/
-RUN $INST_SCRIPTS/epoptes-client.sh
+ADD $DISTRO/epoptes.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/epoptes.sh client
+
+### Install wstunnel
+ADD $COMMON/wstunnel.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/wstunnel.sh
+
+### Install patches
+ADD $DISTRO/epoptes-patch.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/epoptes-patch.sh client
 
 ### Configure startup
 ADD $COMMON/../scripts $STARTUPDIR

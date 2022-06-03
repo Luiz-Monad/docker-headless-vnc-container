@@ -20,10 +20,19 @@ ENV HOME=/headless \
     COMMON=./src/common/install/
 USER root
 WORKDIR $HOME
+EXPOSE 789 987
 
 ### Install epoptes
 ADD $DISTRO/epoptes.sh $INST_SCRIPTS/
-RUN $INST_SCRIPTS/epoptes.sh
+RUN $INST_SCRIPTS/epoptes.sh server
+
+### Install wstunnel
+ADD $COMMON/wstunnel.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/wstunnel.sh
+
+### Install patches
+ADD $DISTRO/epoptes-patch.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/epoptes-patch.sh server
 
 ### Configure startup
 ADD $COMMON/../scripts $STARTUPDIR
