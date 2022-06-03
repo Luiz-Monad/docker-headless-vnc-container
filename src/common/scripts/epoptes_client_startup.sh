@@ -26,9 +26,14 @@ epoptes-client -c
 
 ## configure session
 echo -e "\n------------------- config session -------------------------"
-useradd --uid 1000 --user-group --home-dir $HOME/ --shell /bin/bash default_headless
 echo -e "[Desktop Entry]\nHidden=False" > $HOME/.config/autostart/epoptes-client.desktop
+
+useradd --uid 1000 --user-group --home-dir $HOME/ --shell /bin/bash default_headless
+chown -R 1000:1000 $HOME/.config
+chown -R 1000:1000 $HOME/Desktop
+chmod ugo+rwx $HOME/Desktop/*.desktop
 
 ## cascade the next start script
 echo -e "\n------------------- vnc_startup.sh -------------------------"
-/dockerstartup/vnc_startup.sh $@
+# /dockerstartup/vnc_startup.sh $@
+su default_headless --pty --preserve-environment -c "/dockerstartup/vnc_startup.sh $@"
