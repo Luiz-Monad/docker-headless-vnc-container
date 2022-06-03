@@ -107,6 +107,9 @@ spec:
           - containerPort: 789
             protocol: TCP
             name: epoptes
+          - containerPort: 987
+            protocol: TCP
+            name: reverse-epoptes
         resources:
         env:
           - name: VNC_PW
@@ -129,6 +132,22 @@ spec:
     protocol: TCP
     port: 789
     targetPort: epoptes
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-service-reverse-epoptes
+  labels:
+    app: server
+spec:
+  selector:
+    container: server
+  ports:
+  - name: reverse-epoptes-port-tcp
+    protocol: TCP
+    port: 987
+    targetPort: reverse-epoptes
   type: ClusterIP
 ---
 apiVersion: v1
