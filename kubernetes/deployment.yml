@@ -50,6 +50,11 @@ spec:
         env:
           - name: SERVER
             value: server-service-epoptes
+          - name: VNC_PW
+            valueFrom:
+              secretKeyRef:
+                name: client
+                key: vncpass
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -103,6 +108,12 @@ spec:
             protocol: TCP
             name: epoptes
         resources:
+        env:
+          - name: VNC_PW
+            valueFrom:
+              secretKeyRef:
+                name: server
+                key: vncpass
 ---
 apiVersion: v1
 kind: Service
