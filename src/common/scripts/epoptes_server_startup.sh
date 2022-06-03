@@ -24,11 +24,17 @@ echo -e "\n---------------- start epoptes server ----------------------"
 if [[ $DEBUG == true ]]; then echo "/usr/bin/twistd3 epoptes"; fi
 /usr/bin/twistd3 epoptes &> $STARTUPDIR/epoptes_startup.log
 
+## log connect options
+EPOPTES_IP=$(hostname -i)
+echo -e "\ntwistd3 epoptes \n\t=> connect epoptes-client on $EPOPTES_IP:789"
+echo -e "\nor use the variable SERVER=$EPOPTES_IP"
+
 ## configure session
 echo -e "\n------------------- config session -------------------------"
 cp /usr/share/applications/epoptes.desktop $HOME/Desktop/
 cp /usr/share/applications/epoptes.desktop $HOME/.config/autostart
 echo -e "[Desktop Entry]\nHidden=True" > $HOME/.config/autostart/epoptes-client.desktop
+
 useradd --uid 1000 --user-group --groups epoptes --home-dir $HOME/ --shell /bin/bash default_headless
 chown -R 1000:1000 $HOME/.config
 chown -R 1000:1000 $HOME/Desktop
