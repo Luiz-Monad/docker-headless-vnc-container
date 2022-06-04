@@ -25,14 +25,14 @@ spec:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
           # - '--tail-log'
           - '--debug'
-        ### checks that vnc server is up and running
         livenessProbe:
+          ### checks that http server is up and running
           tcpSocket:
             port: http
           initialDelaySeconds: 2
           timeoutSeconds: 1
-        ### checks if http-vnc connection is working
         readinessProbe:
+          ### checks if http connection is working
           httpGet:
             path: /
             port: http
@@ -52,8 +52,10 @@ spec:
             protocol: TCP
             name: http
         env:
-          - name: SERVER
+          - name: EPOPTES_SERVER
             value: server-service-epoptes
+          - name: EPOPTES_PORT
+            value: 789
           - name: VNC_PW
             valueFrom:
               secretKeyRef:
@@ -95,14 +97,14 @@ spec:
           ### make normal UI startup to connect via: oc rsh <pod-name> bash
           # - '--tail-log'
           - '--debug'
-        ### checks that vnc server is up and running
         livenessProbe:
+          ### checks that vnc server is up and running
           tcpSocket:
             port: epoptes
           initialDelaySeconds: 2
           timeoutSeconds: 1
-        ### checks if http-vnc connection is working
         readinessProbe:
+          ### checks if http-vnc connection is working
           httpGet:
             path: /
             port: http
@@ -119,7 +121,7 @@ spec:
           - containerPort: 789
             protocol: TCP
             name: epoptes
-          - containerPort: 987
+          - containerPort: 9876
             protocol: TCP
             name: reverse-epoptes
         resources:
@@ -148,21 +150,9 @@ spec:
     protocol: TCP
     port: 789
     targetPort: epoptes
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: server-service-reverse-epoptes
-  labels:
-    app: server
-spec:
-  selector:
-    container: server
-  ports:
   - name: reverse-epoptes-port-tcp
     protocol: TCP
-    port: 987
+    port: 9876
     targetPort: reverse-epoptes
   type: ClusterIP
 ---
