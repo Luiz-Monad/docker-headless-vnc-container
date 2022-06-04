@@ -6,7 +6,7 @@ set -e
 source $HOME/.bashrc
 
 if [[ $1 =~ -s|--skip ]]; then
-    echo -e "\n\n------------------ SKIP STARTUP -----------------"
+    echo -e "\n\n-------------------- SKIP STARTUP -------------------"
     echo -e "\n\n------------------ EXECUTE COMMAND ------------------"
     echo "Executing command: '${@:2}'"
     exec "${@:2}"
@@ -19,15 +19,24 @@ cleanup () {
 }
 trap cleanup SIGINT SIGTERM
 
+echo -e "\n---------------- start epoptes client ----------------------"
+
+## config env
+echo -e "\nSetting env..."
+echo -e "export SERVER=$EPOPTES_SERVER" >> /etc/default/epoptes-client
+echo -e "export PORT=$EPOPTES_PORT" >> /etc/default/epoptes-client
+chmod ugo+rwx /etc/default/epoptes-client
+
 ## import the certificate
-echo -e "\n---------------- install certificate -----------------------"
-echo -e "export SERVER=$SERVER\n" > /etc/default/epoptes-client
+echo -e "\nInstalling server certificate..."
 epoptes-client -c
 
 ## configure session
-echo -e "\n------------------- config session -------------------------"
+echo -e "\nSetting desktop session..."
 echo -e "[Desktop Entry]\nHidden=False" > $HOME/.config/autostart/epoptes-client.desktop
 
+## configure user permissions
+echo -e "\nSetting users..."
 useradd --uid 1000 --user-group --home-dir $HOME/ --shell /bin/bash default_headless
 chown -R 1000:1000 $HOME/.config
 chown -R 1000:1000 $HOME/Desktop
