@@ -10,6 +10,10 @@ LABEL io.k8s.description="Epoptes server with Headless VNC Container with Xfce w
       io.openshift.tags="vnc, debian, xfce" \
       io.openshift.non-scalable=true
 
+ENV EPOPTES_PORT=789 \
+    EPOPTES_REVERSE_PORT=9876
+EXPOSE $EPOPTES_PORT $EPOPTES_REVERSE_PORT
+
 ### Environment config
 ENV HOME=/headless \
     TERM=xterm \
@@ -20,7 +24,6 @@ ENV HOME=/headless \
     COMMON=./src/common/install/
 USER root
 WORKDIR $HOME
-EXPOSE 789 987
 
 ### Install epoptes
 ADD $DISTRO/epoptes.sh $INST_SCRIPTS/

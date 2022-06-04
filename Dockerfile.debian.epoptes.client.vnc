@@ -10,6 +10,9 @@ LABEL io.k8s.description="Epoptes client with Headless VNC Container with Xfce w
       io.openshift.tags="vnc, debian, xfce" \
       io.openshift.non-scalable=true
 
+ENV EPOPTES_SERVER=SERVER \
+    EPOPTES_PORT=789
+
 ### Environment config
 ENV HOME=/headless \
     TERM=xterm \
