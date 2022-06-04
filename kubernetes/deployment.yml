@@ -40,6 +40,10 @@ spec:
           initialDelaySeconds: 2
           timeoutSeconds: 1
         resources:
+          requests:
+            memory: 300Mi
+          limits:
+            memory: 800Mi
         ports:
           # - containerPort: 5901
           #   protocol: TCP
@@ -55,6 +59,14 @@ spec:
               secretKeyRef:
                 name: client
                 key: vncpass
+        volumeMounts:
+          - mountPath: /dev/shm
+            name: shm
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 256Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -111,6 +123,10 @@ spec:
             protocol: TCP
             name: reverse-epoptes
         resources:
+          requests:
+            memory: "200Mi"
+          limits:
+            memory: "500Mi"
         env:
           - name: VNC_PW
             valueFrom:
