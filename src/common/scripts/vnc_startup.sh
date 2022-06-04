@@ -45,7 +45,7 @@ if [[ $1 =~ -s|--skip ]]; then
     exec "${@:2}"
 fi
 if [[ $1 =~ -d|--debug ]]; then
-    echo -e "\n\n------------------ DEBUG VNC STARTUP -----------------"
+    echo -e "\n\n------------------ DEBUG VNC STARTUP ----------------"
     export DEBUG=true
 fi
 
