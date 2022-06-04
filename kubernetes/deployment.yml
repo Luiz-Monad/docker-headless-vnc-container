@@ -55,7 +55,7 @@ spec:
           - name: EPOPTES_SERVER
             value: server-service-epoptes
           - name: EPOPTES_PORT
-            value: 789
+            value: '789'
           - name: VNC_PW
             valueFrom:
               secretKeyRef:
