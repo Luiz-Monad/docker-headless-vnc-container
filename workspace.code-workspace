@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "..\\epoptes"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\chrome-docker"
+		}
+	],
+	"settings": {}
+}

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: client
 spec:
-  replicas: 8
+  replicas: 2
   selector:
     matchLabels:
       container: client
@@ -28,32 +28,34 @@ spec:
         livenessProbe:
           ### checks that http server is up and running
           tcpSocket:
-            port: http
+            port: http-vnc
           initialDelaySeconds: 2
           timeoutSeconds: 1
         readinessProbe:
           ### checks if http connection is working
           httpGet:
             path: /
-            port: http
+            port: http-vnc
             scheme: HTTP
           initialDelaySeconds: 2
           timeoutSeconds: 1
         resources:
           requests:
-            memory: 300Mi
+            memory: "400Mi"
+            cpu: "100m"
           limits:
-            memory: 800Mi
+            memory: "1000Mi"
+            cpu: "200m"
         ports:
           # - containerPort: 5901
           #   protocol: TCP
           #   name: vnc
           - containerPort: 6901
             protocol: TCP
-            name: http
+            name: http-vnc
         env:
           - name: EPOPTES_SERVER
-            value: server-service-epoptes
+            value: server-service-control
           - name: EPOPTES_PORT
             value: '789'
           - name: VNC_PW
@@ -100,14 +102,14 @@ spec:
         livenessProbe:
           ### checks that vnc server is up and running
           tcpSocket:
-            port: epoptes
+            port: control
           initialDelaySeconds: 2
           timeoutSeconds: 1
         readinessProbe:
           ### checks if http-vnc connection is working
           httpGet:
             path: /
-            port: http
+            port: remoting
             scheme: HTTP
           initialDelaySeconds: 2
           timeoutSeconds: 1
@@ -117,18 +119,20 @@ spec:
           #   name: vnc
           - containerPort: 6901
             protocol: TCP
-            name: http
+            name: remoting
           - containerPort: 789
             protocol: TCP
-            name: epoptes
+            name: control
           - containerPort: 9876
             protocol: TCP
-            name: reverse-epoptes
+            name: reverse
         resources:
           requests:
-            memory: "200Mi"
+            memory: "400Mi"
+            cpu: "100m"
           limits:
-            memory: "500Mi"
+            memory: "1000Mi"
+            cpu: "200m"
         env:
           - name: VNC_PW
             valueFrom:
@@ -139,37 +143,37 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: server-service-epoptes
+  name: server-service-control
   labels:
     app: server
 spec:
   selector:
     container: server
   ports:
-  - name: epoptes-port-tcp
+  - name: control
     protocol: TCP
     port: 789
-    targetPort: epoptes
-  - name: reverse-epoptes-port-tcp
+    targetPort: control
+  - name: reverse
     protocol: TCP
     port: 9876
-    targetPort: reverse-epoptes
+    targetPort: reverse
   type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: server-service-http
+  name: server-service-remoting
   labels:
     app: server
 spec:
   selector:
     container: server
   ports:
-  - name: http-port-tcp
+  - name: webserver
     protocol: TCP
     port: 80
-    targetPort: http
+    targetPort: remoting
   type: LoadBalancer
 ---
 apiVersion: networking.k8s.io/v1
