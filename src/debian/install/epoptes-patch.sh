@@ -8,7 +8,7 @@ git config --global advice.detachedHead false
 #do
 echo "...patch"
 git clone https://github.com/Luiz-Monad/epoptes.git 
-pushd epoptes && git checkout b456f03e11370d712f235b21887ce121d9d783bd && popd
+pushd epoptes && git checkout bcac14a0bc9c9e874af45b3bf2a9a41657adc1ef && popd
 cp -v -f -R epoptes/epoptes-client/ /usr/share/
 if [ $1 == "server" ]; then
     cp -v -f -R epoptes/epoptes/ /usr/lib/python3/dist-packages/
