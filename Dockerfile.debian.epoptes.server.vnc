@@ -40,6 +40,7 @@ RUN $INST_SCRIPTS/epoptes-patch.sh server
 ### Configure startup
 ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts/xfce $STARTUPDIR
 
 ### Extra xfce/xdg config
 ADD $DISTRO/../xfce/ $HOME/
