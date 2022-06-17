@@ -49,25 +49,30 @@ ADD $COMMON/no_vnc.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/tigervnc.sh
 RUN $INST_SCRIPTS/no_vnc.sh
 
-### Install firefox and chrome browser
-ADD $COMMON/firefox.sh $INST_SCRIPTS/
-ADD $DISTRO/chrome.sh $INST_SCRIPTS/
-RUN $INST_SCRIPTS/firefox.sh
-RUN $INST_SCRIPTS/chrome.sh
-
 ### Install IceWM UI
 ADD $DISTRO/icewm_ui.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/icewm_ui.sh
-ADD ./src/ubuntu/icewm/ $HOME/
+ADD $DISTRO/../icewm/ $HOME/
 
-### configure startup
+### Install firefox
+ADD $COMMON/firefox.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/firefox.sh
+
+### Install chrome browser
+ADD $DISTRO/chrome.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/chrome.sh
+
+### Configure startup
 ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
-ADD ./src/common/scripts $STARTUPDIR
+
+ADD $COMMON/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts/icewm $STARTUPDIR
+
 ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
 USER 1000
-
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
 CMD ["--wait"]
