@@ -52,7 +52,7 @@ RUN $INST_SCRIPTS/no_vnc.sh
 ### Install xfce UI
 ADD $DISTRO/xfce_ui.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/xfce_ui.sh
-ADD ./src/common/xfce/ $HOME/
+ADD $COMMON/../xfce/ $HOME/
 
 ### Install firefox
 ADD $COMMON/firefox.sh $INST_SCRIPTS/
@@ -62,17 +62,17 @@ RUN $INST_SCRIPTS/firefox.sh
 ADD $DISTRO/chrome.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/chrome.sh
 
-### configure startup
+### Configure startup
 ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 
 ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts/xfce $STARTUPDIR
 
 ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
 
 USER 1000
-
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
 CMD ["--wait"]
