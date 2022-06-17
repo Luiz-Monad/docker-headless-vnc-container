@@ -1,14 +1,14 @@
-# This Dockerfile is used to build an headles vnc image based on Ubuntu
+# This Dockerfile is used to build an headles vnc image based on Debian
 
-FROM ubuntu:18.04
+FROM debian:stable-slim
 
 MAINTAINER Simon Hofmann "simon.hofmann@consol.de"
 ENV REFRESHED_AT 2018-10-29
 
-LABEL io.k8s.description="Headless VNC Container with Xfce window manager, firefox and chromium" \
-      io.k8s.display-name="Headless VNC Container based on Ubuntu" \
+LABEL io.k8s.description="Headless VNC Container with IceWM window manager, firefox and chromium" \
+      io.k8s.display-name="Headless VNC Container based on Debian" \
       io.openshift.expose-services="6901:http,5901:xvnc" \
-      io.openshift.tags="vnc, ubuntu, xfce" \
+      io.openshift.tags="vnc, debian, icewm" \
       io.openshift.non-scalable=true
 
 ## Connection ports for controlling the UI:
@@ -30,7 +30,7 @@ ENV HOME=/headless \
     VNC_RESOLUTION=1280x1024 \
     VNC_PW=vncpassword \
     VNC_VIEW_ONLY=false \
-    DISTRO=./src/ubuntu/install/ \
+    DISTRO=./src/debian/install/ \
     COMMON=./src/common/install/
 WORKDIR $HOME
 
@@ -49,10 +49,10 @@ ADD $COMMON/no_vnc.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/tigervnc.sh
 RUN $INST_SCRIPTS/no_vnc.sh
 
-### Install xfce UI
-ADD $DISTRO/xfce_ui.sh $INST_SCRIPTS/
-RUN $INST_SCRIPTS/xfce_ui.sh
-ADD $COMMON/../xfce/ $HOME/
+### Install IceWM UI
+ADD $DISTRO/icewm_ui.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/icewm_ui.sh
+ADD $DISTRO/../icewm/ $HOME/
 
 ### Install firefox
 ADD $COMMON/firefox.sh $INST_SCRIPTS/
@@ -66,12 +66,18 @@ RUN $INST_SCRIPTS/chrome.sh
 ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
 
+ADD $DISTRO/dbus_setup.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/dbus_setup.sh
+
 ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
-ADD $DISTRO/../scripts/xfce $STARTUPDIR
+ADD $DISTRO/../scripts/icewm $STARTUPDIR
 
 ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
+
+ADD $DISTRO/chrome_setup.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/chrome_setup.sh $STARTUPDIR
 
 USER 1000
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
