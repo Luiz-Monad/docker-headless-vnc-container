@@ -41,11 +41,11 @@ spec:
           timeoutSeconds: 1
         resources:
           requests:
-            memory: "400Mi"
+            memory: "100Mi"
             cpu: "100m"
           limits:
             memory: "1000Mi"
-            cpu: "200m"
+            cpu: "500m"
         ports:
           # - containerPort: 5901
           #   protocol: TCP
@@ -132,11 +132,11 @@ spec:
             name: reverse
         resources:
           requests:
-            memory: "400Mi"
-            cpu: "100m"
+            memory: "200Mi"
+            cpu: "200m"
           limits:
             memory: "1000Mi"
-            cpu: "200m"
+            cpu: "500m"
         env:
           - name: VNC_PW
             valueFrom:
