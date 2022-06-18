@@ -62,6 +62,9 @@ RUN $INST_SCRIPTS/firefox.sh
 ADD $DISTRO/chrome.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/chrome.sh
 
+ADD $DISTRO/chrome_setup.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/chrome_setup.sh $STARTUPDIR
+
 ### Configure startup
 ADD $DISTRO/libnss_wrapper.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/libnss_wrapper.sh
@@ -73,11 +76,9 @@ ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts/xfce $STARTUPDIR
 
+### Fix permissions
 ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
-
-ADD $DISTRO/chrome_setup.sh $INST_SCRIPTS/
-RUN $INST_SCRIPTS/chrome_setup.sh $STARTUPDIR
 
 USER 1000
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
