@@ -55,6 +55,10 @@ ADD $DISTRO/../xfce/ $HOME/
 ADD $DISTRO/../xdg/ $HOME/
 ADD $KUBE/../xfce/ $HOME/
 
+### Fix permissions
+ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
+RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
+
 USER root
 ENTRYPOINT ["/dockerstartup/kube_server_startup.sh"]
 CMD ["--wait"]
