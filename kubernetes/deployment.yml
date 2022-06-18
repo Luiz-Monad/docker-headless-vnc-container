@@ -54,6 +54,10 @@ spec:
             protocol: TCP
             name: http-vnc
         env:
+          - name: SKIP_NOVNC
+            value: '1'
+          - name: VNC_RESOLUTION
+            value: '640x480'
           - name: EPOPTES_SERVER
             value: server-service-control
           - name: EPOPTES_PORT
@@ -139,6 +143,17 @@ spec:
               secretKeyRef:
                 name: server
                 key: vncpass
+        volumeMounts:
+          - mountPath: /headless/.kube
+            name: kube
+            readOnly: true
+      volumes:
+        - name: kube
+          configMap:
+            name: kube-config
+            items:
+            - key: "config"
+              path: "config"
 ---
 apiVersion: v1
 kind: Service
