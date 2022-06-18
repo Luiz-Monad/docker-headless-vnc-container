@@ -26,17 +26,21 @@ spec:
           # - '--tail-log'
           - '--debug'
         livenessProbe:
-          ### checks that http server is up and running
-          tcpSocket:
-            port: http-vnc
+          ### checks the vncserver is up and running
+          exec:
+            command: 
+              - bash
+              - -c
+              - '[ -z `ps -C vncserver -o pid=` ]'
           initialDelaySeconds: 2
           timeoutSeconds: 1
         readinessProbe:
-          ### checks if http connection is working
-          httpGet:
-            path: /
-            port: http-vnc
-            scheme: HTTP
+          ### checks if epoptes connection is working
+          exec:
+            command:
+              - bash
+              - -c
+              - '[ `netstat -an4 | grep :789 | wc -l` -ge 1 ] && exit 1 || exit 0'
           initialDelaySeconds: 2
           timeoutSeconds: 1
         resources:
@@ -46,13 +50,6 @@ spec:
           limits:
             memory: "1000Mi"
             cpu: "500m"
-        ports:
-          # - containerPort: 5901
-          #   protocol: TCP
-          #   name: vnc
-          - containerPort: 6901
-            protocol: TCP
-            name: http-vnc
         env:
           - name: SKIP_NOVNC
             value: '1'
@@ -118,9 +115,6 @@ spec:
           initialDelaySeconds: 2
           timeoutSeconds: 1
         ports:
-          # - containerPort: 5901
-          #   protocol: TCP
-          #   name: vnc
           - containerPort: 6901
             protocol: TCP
             name: remoting
