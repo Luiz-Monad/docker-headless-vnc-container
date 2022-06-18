@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -c "$STARTUPDIR/scale.py up"
+Icon=list-add
+Name=Scale Up new clients
+Terminal=true

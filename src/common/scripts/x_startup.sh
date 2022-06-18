@@ -59,36 +59,14 @@ trap cleanup SIGINT SIGTERM
 ## write correct window size to chrome properties
 $STARTUPDIR/chrome-init.sh
 
-## resolve_vnc_connection
-VNC_IP=$(hostname -i)
+echo -e "\n--------------------- start display server --------------------"
 
 ## change vnc password
-echo -e "\n------------------ change VNC password  ------------------"
-# first entry is control, second is view (if only one is valid for both)
 mkdir -p "$HOME/.vnc"
 PASSWD_PATH="$HOME/.vnc/passwd"
-
-if [[ -f $PASSWD_PATH ]]; then
-    echo -e "\n---------  purging existing VNC password settings  ---------"
-    rm -f $PASSWD_PATH
-fi
-
-if [[ $VNC_VIEW_ONLY == "true" ]]; then
-    echo "start VNC server in VIEW ONLY mode!"
-    #create random pw to prevent access
-    echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
-fi
 echo "$VNC_PW" | vncpasswd -f >> $PASSWD_PATH
 chmod 600 $PASSWD_PATH
 
-
-## start vncserver and noVNC webclient
-echo -e "\n------------------ start noVNC  ----------------------------"
-if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/launch.sh --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"; fi
-$NO_VNC_HOME/utils/launch.sh --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT &> $STARTUPDIR/no_vnc_startup.log &
-PID_SUB=$!
-
-echo -e "\n------------------ start VNC server ------------------------"
 echo "remove old vnc locks to be a reattachable container"
 vncserver -kill $DISPLAY &> $STARTUPDIR/vnc_startup.log \
     || rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> $STARTUPDIR/vnc_startup.log \
@@ -99,23 +77,24 @@ if [[ $DEBUG == true ]]; then VNC_DEBUG="--verbose"; fi
 if [[ $DEBUG == true ]]; then echo "vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION $VNC_DEBUG"; fi
 vncserver $DISPLAY -depth $VNC_COL_DEPTH -geometry $VNC_RESOLUTION $VNC_DEBUG &> $STARTUPDIR/no_vnc_startup.log
 
-echo -e "start window manager\n..."
-$STARTUPDIR/wm_startup.sh &> $STARTUPDIR/wm_startup.log
+while [ -z "$PID_SUB" ]; do
+    sleep 1
+    PID_SUB=`ps -C vncserver -o pid=`
+done
+PID_SUB="${PID_SUB// /}"
 
 ## log connect options
-echo -e "\n\n------------------ VNC environment started ------------------"
-echo -e "\nVNCSERVER started on DISPLAY= $DISPLAY \n\t=> connect via VNC viewer with $VNC_IP:$VNC_PORT"
-echo -e "\nnoVNC HTML client started:\n\t=> connect via http://$VNC_IP:$NO_VNC_PORT/?password=...\n"
-
+echo -e "\n\n-------------------- environment started --------------------"
+echo -e "\nWM started on DISPLAY= $DISPLAY \n"
 
 if [[ $DEBUG == true ]] || [[ $1 =~ -t|--tail-log ]]; then
     echo -e "\n--------------------------- logs ----------------------------"
     # if option `-t` or `--tail-log` block the execution and tail the VNC log
-    tail -f $STARTUPDIR/*.log $HOME/.vnc/*.log
+    tail -f $STARTUPDIR/*.log
 fi
 
 if [ -z "$1" ] || [[ $1 =~ -w|--wait ]]; then
-    wait $PID_SUB
+    tail --pid=$PID_SUB -f /dev/null
 else
     # unknown option ==> call command
     echo -e "\n\n------------------ EXECUTE COMMAND ------------------"

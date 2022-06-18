@@ -71,6 +71,7 @@ RUN $INST_SCRIPTS/dbus_setup.sh
 
 ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
+ADD $DISTRO/../scripts/xfce $STARTUPDIR
 
 ADD $COMMON/set_user_permission.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
