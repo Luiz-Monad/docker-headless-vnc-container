@@ -21,7 +21,8 @@ ENV HOME=/headless \
     DEBIAN_FRONTEND=noninteractive \
     DISTRO=./src/debian/install/ \
     COMMON=./src/common/install/ \
-    EPOPTES=./src/epoptes/install/
+    EPOPTES=./src/epoptes/install/\
+    KUBE=./src/kube/install/
 USER root
 WORKDIR $HOME
 
@@ -42,6 +43,7 @@ ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts/xfce $STARTUPDIR
 ADD $EPOPTES/../scripts $STARTUPDIR
+ADD $KUBE/../scripts $STARTUPDIR
 
 ### Extra xfce/xdg config
 ADD $DISTRO/../xfce/ $HOME/
