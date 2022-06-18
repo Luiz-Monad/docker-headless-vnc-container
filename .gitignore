@@ -2,3 +2,5 @@ target
 .idea
 *.iml
 *.log
+kubernetes/config
+kubernetes/cache/*
