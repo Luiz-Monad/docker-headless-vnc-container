@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -c "$STARTUPDIR/scale.py down"
+Icon=list-remove
+Name=Stop all clients
+Terminal=true
