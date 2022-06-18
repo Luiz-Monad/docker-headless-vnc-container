@@ -21,26 +21,28 @@ ENV HOME=/headless \
     INST_SCRIPTS=/headless/install \
     DEBIAN_FRONTEND=noninteractive \
     DISTRO=./src/debian/install/ \
-    COMMON=./src/common/install/
+    COMMON=./src/common/install/ \
+    EPOPTES=./src/epoptes/install/
 USER root
 WORKDIR $HOME
 
 ### Install epoptes
-ADD $DISTRO/epoptes.sh $INST_SCRIPTS/
+ADD $EPOPTES/epoptes.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/epoptes.sh server
 
 ### Install wstunnel
-ADD $COMMON/wstunnel.sh $INST_SCRIPTS/
+ADD $EPOPTES/wstunnel.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/wstunnel.sh
 
 ### Install patches
-ADD $DISTRO/epoptes-patch.sh $INST_SCRIPTS/
+ADD $EPOPTES/epoptes-patch.sh $INST_SCRIPTS/
 RUN $INST_SCRIPTS/epoptes-patch.sh server
 
 ### Configure startup
 ADD $COMMON/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts $STARTUPDIR
 ADD $DISTRO/../scripts/xfce $STARTUPDIR
+ADD $EPOPTES/../scripts $STARTUPDIR
 
 ### Extra xfce/xdg config
 ADD $DISTRO/../xfce/ $HOME/
