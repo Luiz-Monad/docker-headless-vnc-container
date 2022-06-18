@@ -36,7 +36,7 @@ spec:
           ### checks if epoptes connection is working
           exec:
             command:
-              - /dockerstartup/readness.sh
+              - /dockerstartup/readyness.sh
           initialDelaySeconds: 2
           timeoutSeconds: 1
         resources:
