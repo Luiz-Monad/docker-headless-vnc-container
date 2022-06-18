@@ -21,6 +21,8 @@ trap cleanup SIGINT SIGTERM
 
 ## configure tools
 echo -e "\nSetting tools..."
+mkdir -p $HOME/.kube
+cp /config/kube-config $HOME/.kube/config
 chown -R 1000:1000 $HOME/.kube
 chmod -R ugo+rwx $HOME/.kube
 
