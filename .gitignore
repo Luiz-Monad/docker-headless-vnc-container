@@ -2,5 +2,5 @@ target
 .idea
 *.iml
 *.log
-kubernetes/config
+kubernetes/kube-config
 kubernetes/cache/*
