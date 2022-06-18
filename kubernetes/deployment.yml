@@ -69,9 +69,9 @@ spec:
                 key: vncpass
         volumeMounts:
           - mountPath: /dev/shm
-            name: shm
+            name: shm-vol
       volumes:
-        - name: shm
+        - name: shm-vol
           emptyDir:
             medium: Memory
             sizeLimit: 256Mi
@@ -144,16 +144,16 @@ spec:
                 name: server
                 key: vncpass
         volumeMounts:
-          - mountPath: /headless/.kube
-            name: kube
+          - mountPath: /config
+            name: config-vol
             readOnly: true
       volumes:
-        - name: kube
+        - name: config-vol
           configMap:
-            name: kube-config
+            name: server
             items:
-            - key: "config"
-              path: "config"
+            - key: "kube-config"
+              path: "kube-config"
 ---
 apiVersion: v1
 kind: Service
