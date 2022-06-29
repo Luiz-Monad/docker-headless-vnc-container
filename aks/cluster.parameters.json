@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "swarm"
+        },
+        "dnsPrefix": {
+            "value": "swarm-chrome"
+        },
+        "osDiskSizeGB": {
+            "value": 40
+        },
+        "kubernetesVersion": {
+            "value": "1.22.6"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "enableRBAC": {
+            "value": false
+        },
+        "enablePrivateCluster": {
+            "value": false
+        },
+        "enableHttpApplicationRouting": {
+            "value": false
+        },
+        "enableAzurePolicy": {
+            "value": false
+        },
+        "enableSecretStoreCSIDriver": {
+            "value": false
+        },
+        "vnetSubnetID": {
+            "value": "swarm-vnet"
+        },
+        "vnetAddressSpace": {
+            "value": "10.0.0.0/8"
+        },
+        "serviceCidr": {
+            "value": "10.0.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.0.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "clusterVnetSubnetName": {
+            "value": "default"
+        },
+        "clusterVnetSubnetAddress": {
+            "value": "10.240.0.0/16"
+        },
+        "aciVnetSubnetName": {
+            "value": "virtual-node-aci"
+        },
+        "aciVnetSubnetAddress": {
+            "value": "10.241.0.0/16"
+        },
+        "aciConnectorLinuxEnabled": {
+            "value": false
+        }
+    }
+}

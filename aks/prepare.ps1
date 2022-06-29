@@ -1,6 +1,21 @@
 
 Install-Module -Name Az.Aks -Repository PSGallery
-Import-Module -Name Az.Aks
+Install-Module -Name Az.Compute -Repository PSGalleryx
+
+Import-Module Az.Aks
+Import-Module Az.Compute
+
+Login-AzAccount
+
+New-AzResourceGroup `
+    -Name $env:aks_resource_group `
+    -Location $env:aks_location
+
+New-AzResourceGroupDeployment `
+    -ResourceGroupName $env:aks_resource_group `
+    -TemplateFile cluster.json `
+    -TemplateParameterFile cluster.parameters.json `
+    -Debug
 
 Install-AzAksKubectl -Destination (Get-Item .)
 Get-AzAksCluster | Import-AzAksCredential -ConfigPath (Join-Path (Get-Item .) 'kube-config') -Force

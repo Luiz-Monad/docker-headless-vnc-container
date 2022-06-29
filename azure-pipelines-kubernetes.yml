@@ -13,7 +13,6 @@ variables:
   imageTag: 'latest'
   imagePullSecret: 'monadic5559eb9a-auth'
   kubernetesServiceConnection: 'swarm-kubernetes'
-  azureSubscriptionConnection: 'docker-swarm-resource-group'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -28,14 +27,6 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: $(azureSubscriptionConnection)
-        scriptType: 'pscore'
-        scriptLocation: 'scriptPath'
-        scriptPath: |
-          $(Build.SourcesDirectory)/kubernetes/prepare.ps1
 
     - task: KubernetesManifest@0
       displayName: Create imagePullSecret

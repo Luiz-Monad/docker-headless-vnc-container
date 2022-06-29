@@ -1,0 +1,35 @@
+# Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/ecosystems/kubernetes/deploy
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  kubernetesServiceConnection: 'swarm-kubernetes'
+  azureSubscriptionConnection: 'docker-swarm-resource-group'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Deploy
+  displayName: Deploy stage
+
+  jobs:
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+
+    - task: AzureCLI@2
+      displayName: Create configMaps
+      inputs:
+        azureSubscription: $(azureSubscriptionConnection)
+        scriptType: 'pscore'
+        scriptLocation: 'scriptPath'
+        scriptPath: |
+          $(Build.SourcesDirectory)/kubernetes/prepare.ps1
