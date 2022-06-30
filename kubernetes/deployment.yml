@@ -91,8 +91,8 @@ spec:
         container: server
     spec:
       terminationGracePeriodSeconds: 2
-      imagePullSecrets: 
-        - name: monadic5559eb9a-auth
+      # imagePullSecrets: 
+      #   - name: monadic5559eb9a-auth
       containers:
       - name: docker-headless-vnc-epotes-srv
         image: monadic.azurecr.io/docker-headless-vnc-epotes-srv:latest
