@@ -21,10 +21,6 @@ spec:
         - name: docker-headless-vnc-epotes-cli
           image: monadic.azurecr.io/docker-headless-vnc-epotes-cli:latest
           imagePullPolicy: Always
-          args:
-            ### make normal UI startup to connect via: oc rsh <pod-name> bash
-            # - '--tail-log'
-            - '--debug'
           livenessProbe:
             ### checks the vncserver is up and running
             exec:
@@ -101,10 +97,6 @@ spec:
       - name: docker-headless-vnc-epotes-srv
         image: monadic.azurecr.io/docker-headless-vnc-epotes-srv:latest
         imagePullPolicy: Always
-        args:
-          ### make normal UI startup to connect via: oc rsh <pod-name> bash
-          # - '--tail-log'
-          - '--debug'
         livenessProbe:
           ### checks that vnc server is up and running
           tcpSocket:
