@@ -18,56 +18,65 @@ spec:
       imagePullSecrets: 
         - name: monadic5559eb9a-auth
       containers:
-      - name: docker-headless-vnc-epotes-cli
-        image: monadic.azurecr.io/docker-headless-vnc-epotes-cli:latest
-        imagePullPolicy: Always
-        args:
-          ### make normal UI startup to connect via: oc rsh <pod-name> bash
-          # - '--tail-log'
-          - '--debug'
-        livenessProbe:
-          ### checks the vncserver is up and running
-          exec:
-            command: 
-              - /dockerstartup/liveness.sh
-          initialDelaySeconds: 2
-          timeoutSeconds: 1
-        readinessProbe:
-          ### checks if epoptes connection is working
-          exec:
-            command:
-              - /dockerstartup/readyness.sh
-          initialDelaySeconds: 2
-          timeoutSeconds: 1
-        resources:
-          requests:
-            memory: "100Mi"
-            cpu: "100m"
-          limits:
-            memory: "1000Mi"
-            cpu: "500m"
-        env:
-          - name: SKIP_NOVNC
-            value: '1'
-          - name: VNC_RESOLUTION
-            value: '640x480'
-          - name: EPOPTES_SERVER
-            value: server-service-control
-          - name: EPOPTES_PORT
-            value: '789'
-          - name: VNC_PW
-            valueFrom:
-              secretKeyRef:
-                name: client
-                key: vncpass
-        volumeMounts:
-          - mountPath: /dev/shm
-            name: shm-vol
+        - name: docker-headless-vnc-epotes-cli
+          image: monadic.azurecr.io/docker-headless-vnc-epotes-cli:latest
+          imagePullPolicy: Always
+          args:
+            ### make normal UI startup to connect via: oc rsh <pod-name> bash
+            # - '--tail-log'
+            - '--debug'
+          livenessProbe:
+            ### checks the vncserver is up and running
+            exec:
+              command: 
+                - /dockerstartup/liveness.sh
+            initialDelaySeconds: 2
+            timeoutSeconds: 1
+          readinessProbe:
+            ### checks if epoptes connection is working
+            exec:
+              command:
+                - /dockerstartup/readyness.sh
+            initialDelaySeconds: 2
+            timeoutSeconds: 1
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+          env:
+            - name: SKIP_NOVNC
+              value: '1'
+            - name: VNC_RESOLUTION
+              value: '640x480'
+            - name: EPOPTES_SERVER
+              value: server-service-control
+            - name: EPOPTES_PORT
+              value: '789'
+            - name: VNC_PW
+              valueFrom:
+                secretKeyRef:
+                  name: client
+                  key: vncpass
+          volumeMounts:
+            - mountPath: /dev/shm
+              name: shm-vol
       volumes:
         - name: shm-vol
           emptyDir:
             medium: Memory
             sizeLimit: 256Mi
+      nodeSelector:
+        kubernetes.io/role: agent
+        beta.kubernetes.io/os: linux
+        type: virtual-kubelet
+      tolerations:
+        - key: virtual-kubelet.io/provider
+          operator: Exists
+        - key: azure.com/aci
+          effect: NoSchedule
 ---
 apiVersion: apps/v1
 kind: Deployment
