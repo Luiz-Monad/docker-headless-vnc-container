@@ -14,7 +14,7 @@ spec:
       labels:
         container: client
     spec:
-      terminationGracePeriodSeconds: 2
+      terminationGracePeriodSeconds: 30
       imagePullSecrets: 
         - name: monadic5559eb9a-auth
       containers:
@@ -26,14 +26,14 @@ spec:
             exec:
               command: 
                 - /dockerstartup/liveness.sh
-            initialDelaySeconds: 2
+            initialDelaySeconds: 30
             timeoutSeconds: 1
           readinessProbe:
             ### checks if epoptes connection is working
             exec:
               command:
                 - /dockerstartup/readyness.sh
-            initialDelaySeconds: 2
+            initialDelaySeconds: 30
             timeoutSeconds: 1
           resources:
             requests:
@@ -90,7 +90,7 @@ spec:
       labels:
         container: server
     spec:
-      terminationGracePeriodSeconds: 2
+      terminationGracePeriodSeconds: 30
       # imagePullSecrets: 
       #   - name: monadic5559eb9a-auth
       containers:
@@ -101,7 +101,7 @@ spec:
           ### checks that vnc server is up and running
           tcpSocket:
             port: control
-          initialDelaySeconds: 2
+          initialDelaySeconds: 30
           timeoutSeconds: 1
         readinessProbe:
           ### checks if http-vnc connection is working
@@ -109,7 +109,7 @@ spec:
             path: /
             port: remoting
             scheme: HTTP
-          initialDelaySeconds: 2
+          initialDelaySeconds: 30
           timeoutSeconds: 1
         ports:
           - containerPort: 6901
