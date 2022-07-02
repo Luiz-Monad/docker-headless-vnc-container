@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Exec=bash -c "kubectl get events --namespace default -w"
+Icon=gtk-yes
+Name=Cluster Status
+Terminal=true
